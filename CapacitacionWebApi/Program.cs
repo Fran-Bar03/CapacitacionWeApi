@@ -1,3 +1,7 @@
+using WebApi.Data;
+using WebApi.Data.Interfaces;
+using WebApi.Data.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +10,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+PostgresqlConfiguration postgresqlConfiguration = new PostgresqlConfiguration(Environment.GetEnvironmentVariable("CONNECTION_STRING"));
+builder.Services.AddSingleton(postgresqlConfiguration);
+
+builder.Services.AddScoped<ITareaService, TareaService>();
 
 var app = builder.Build();
 
