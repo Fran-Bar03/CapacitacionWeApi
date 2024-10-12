@@ -32,7 +32,7 @@ namespace WebApi.Data.Services
              "p_descripcion := @descripcion," +
              "p_idUsuario := @userId" +
              ");";
-
+            
             
             try
             {
