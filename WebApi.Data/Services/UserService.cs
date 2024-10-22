@@ -29,12 +29,40 @@ public class UserService : IUserService
 
         using NpgsqlConnection database = CreateConnection();
 
+        Dictionary<int, List<TareaModel>> userTasks = [];
         try
         {
             await database.OpenAsync();
-            IEnumerable<UserModel> users = await database.QueryAsync<UserModel>(sqlQuery);
+
+            IEnumerable<UserModel> result = await database.QueryAsync<UserModel, TareaModel, UserModel>(
+                sql: sqlQuery,
+                map: (user, task) =>
+                {
+
+                    List<TareaModel> currentTasks = [];
+                    userTasks.TryGetValue(user.idUsuario, out currentTasks);
+
+                    currentTasks ??= [];
+
+                    if (currentTasks.Count == 0) currentTasks = [task];
+
+                    else currentTasks.Add(task);
+
+                    userTasks[user.idUsuario] = currentTasks;
+
+                    return user;
+                },
+                splitOn: "idTarea"
+            );
 
             await database.CloseAsync();
+
+            IEnumerable<UserModel> users = result.Distinct().ToList().Select(user =>
+            {
+                user.Tareas = userTasks[user.idUsuario];
+                return user;
+            });
+            
 
             return users;
         }
