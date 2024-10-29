@@ -71,6 +71,47 @@ namespace WebApi.Data.Services
 
         }
 
-                #endregion
+        #endregion
+
+        #region FindAll
+
+        public async Task<IEnumerable<TareaModel?>> FindAll(int userId)
+        {
+            using NpgsqlConnection database = CreateConnection();
+            string sqlQuery = "Select * from view_tarea where idUsuario = @userId";
+
+            try
+            {
+                await database.OpenAsync();
+
+                var result = await database.QueryAsync<TareaModel, UserModel, TareaModel>(
+                    sqlQuery,
+                    param: new
+                    {
+                        userId
+                    },
+                 map: (task, user) =>
+                 {
+                     task.Usuario = user;
+                     return task;
+                 },
+                 splitOn: "usuarioId"
+
+                 );
+
+
+                await database.CloseAsync();
+                return result;
+            }
+
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+
+
+        #endregion
     }
 }

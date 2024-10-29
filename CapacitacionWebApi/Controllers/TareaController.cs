@@ -18,9 +18,16 @@ namespace CapacitacionWebApi.Controllers
 
         // GET: api/<TareaController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> FindAll([FromQuery] int userId)
         {
-            return new string[] { "value1", "value2" };
+            IEnumerable<TareaModel> task = await _service.FindAll(userId);
+
+            if (task.Count() == 0)
+            {
+                return NotFound();
+            } 
+
+            return Ok(task);
         }
         
         // GET api/<TareaController>/5
