@@ -8,7 +8,7 @@ namespace WebApi.Models
 {
     public class UserModel
     {
-
+        
         public int idUsuario { get; set; }
 
         public string Nombre { get; set; }

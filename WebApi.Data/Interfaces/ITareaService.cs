@@ -12,7 +12,7 @@ namespace WebApi.Data.Interfaces
     {
         public Task<TareaModel> Create(CreateTareaDTO createTareaDTO);
 
-        public Task<TareaModel> Update(UpdateTareaDTO updateTareaDTO);
+        //public Task<TareaModel> Update(UpdateTareaDTO updateTareaDTO);
 
         public Task<IEnumerable<TareaModel?>> FindAll(int userId);
 

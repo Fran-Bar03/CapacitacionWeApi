@@ -1,6 +1,7 @@
 ﻿
 using Dapper;
 using Npgsql;
+using System.Data;
 using WebApi.Data.Interfaces;
 using WebApi.DTOs.User;
 using WebApi.Models;
@@ -16,9 +17,35 @@ public class UserService : IUserService
     
 
     #region Create
-    public Task<UserModel> Create(CreateUserDto createUserDto)
+    public async Task<UserModel?> Create(CreateUserDto createUserDto)
     {
-        throw new NotImplementedException();
+        using NpgsqlConnection database = CreateConnection();
+
+        string sqlQuery = "select * from fun_user_create(" +
+            "p_nombre := @nombre," +
+            "p_usuario := @usuario," +
+            "p_contrasena := @contrasena)";
+        
+        
+        try
+        {
+            await database.OpenAsync();
+            IEnumerable<UserModel?> result = await database.QueryAsync<UserModel>(
+                sqlQuery,
+                param: new
+                {
+                    nombre = createUserDto.Names,
+                    usuario = createUserDto.Username,
+                    contrasena = createUserDto.Password
+                });
+            await database.CloseAsync();
+            return result.FirstOrDefault();
+        }
+
+        catch ( Exception ex )
+        {
+            return null;
+        }
     }
     #endregion
 
@@ -73,25 +100,94 @@ public class UserService : IUserService
         }
     }
         #endregion
-
+    
     #region FindOne
-        public Task<UserModel>? FindOne(int userId)
+        public async Task<UserModel?> FindOne(int userId)
     {
-        throw new NotImplementedException();
+        using NpgsqlConnection database = CreateConnection();
+        string sqlQuery = "select * from usuario where idusuario = @idusuario"; 
+        
+        try
+        {
+            await database.OpenAsync();
+            UserModel? result = await database.QueryFirstOrDefaultAsync<UserModel>(
+                sqlQuery,
+                param: new
+                {
+                    idusuario = userId
+                });
+            await database.CloseAsync();
+            return result;
+        }
+
+        catch (Exception ex)
+        {
+            return null;
+        }
+        
     }
     #endregion
 
     #region Remove
-    public Task<UserModel> Remove(int userId)
+    public async Task<UserModel> Remove(int userId)
     {
-        throw new NotImplementedException();
+        NpgsqlConnection database = CreateConnection();
+        string sqlQuery = "Select * from fun_user_remove(" +
+            "p_idUsuario := @idusuario)";
+        
+
+        try
+        {
+            await database.OpenAsync();
+            UserModel? result = await database.QueryFirstOrDefaultAsync<UserModel>(
+                sqlQuery,
+                param: new
+                {
+                    idusuario = userId
+                });
+            
+            await database.CloseAsync();
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+
+        
+
     }
     #endregion
-
+    
     #region Update
-    public Task<UserModel>? Update(UpdateUserDto updateUserDto)
+    public async Task<UserModel?> Update(int userid, UpdateUserDto updateUserDto)
     {
-        throw new NotImplementedException();
+        NpgsqlConnection database = CreateConnection();
+        string sqlQuery = "Select * from fun_user_update(" +
+            "p_idUsuario := @idusuario," +
+            "p_nombre := @nombre," +
+            "p_usuario := @usuario," +
+            "p_contrasena := @contrasena)";
+        
+        try
+        {
+            await database.OpenAsync();
+            var result = await database.QueryAsync<UserModel>(
+                sqlQuery,
+                param: new
+                {
+                    idusuario = userid,
+                    nombre = updateUserDto.Names,
+                    usuario = updateUserDto.Username,
+                    contrasena = updateUserDto.Password
+                });
+            await database.CloseAsync();
+            return result.FirstOrDefault();
+        }
+        catch (Exception ex)
+        {
+            return null;
+        } 
     }
     #endregion
 }

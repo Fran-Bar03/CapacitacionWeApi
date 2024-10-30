@@ -70,7 +70,7 @@ namespace WebApi.Data.Services
             }
 
         }
-
+        
         #endregion
 
         #region FindAll
@@ -98,7 +98,7 @@ namespace WebApi.Data.Services
                  splitOn: "usuarioId"
 
                  );
-
+                
 
                 await database.CloseAsync();
                 return result;
@@ -110,6 +110,11 @@ namespace WebApi.Data.Services
             }
 
         }
+
+
+        #endregion
+
+        #region Update 
 
 
         #endregion
