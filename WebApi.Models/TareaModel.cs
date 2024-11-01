@@ -18,7 +18,7 @@ namespace WebApi.Models
 
         public int IdUsuario { get; set; }
 
-        public UserModel Usuario { get; set; }
+        public UserModel Usuarioo { get; set; }
 
     }
 }

@@ -10,12 +10,18 @@ namespace WebApi.Data.Interfaces
 {
     public interface ITareaService
     {
-        public Task<TareaModel> Create(CreateTareaDTO createTareaDTO);
+        public Task<TareaModel?> Create(CreateTareaDTO createTareaDTO);
 
-        //public Task<TareaModel> Update(UpdateTareaDTO updateTareaDTO);
+        public Task<TareaModel?> Update(int idtask, UpdateTareaDTO updateTareaDTO);
 
         public Task<IEnumerable<TareaModel?>> FindAll(int userId);
 
-        
+        public Task<TareaModel?> Remove(int idtask);
+
+        public Task<TareaModel?> togglestatus(int idtask);
+
+
+
+
     }
 }

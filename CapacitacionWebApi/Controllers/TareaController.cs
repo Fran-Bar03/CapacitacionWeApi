@@ -13,7 +13,7 @@ namespace CapacitacionWebApi.Controllers
     {
 
         ITareaService _service;
-        public TareaController (ITareaService service) => _service = service;
+        public TareaController(ITareaService service) => _service = service;
 
 
         // GET: api/<TareaController>
@@ -25,17 +25,18 @@ namespace CapacitacionWebApi.Controllers
             if (task.Count() == 0)
             {
                 return NotFound();
-            } 
+            }
 
             return Ok(task);
         }
-        
-        // GET api/<TareaController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+
+        [HttpPut("togglestatus/{idtask}")] //togglestatus
+        public async Task<IActionResult> togglestatus(int idtask)
         {
-            return "value";
+            TareaModel? status = await _service.togglestatus(idtask);
+            return Ok(status);
         }
+        
 
         // POST api/<TareaController>
         [HttpPost]
@@ -46,20 +47,24 @@ namespace CapacitacionWebApi.Controllers
             if (task == null) return NotFound();
 
             return Ok(task);
-
             
         }
 
         // PUT api/<TareaController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateTareaDTO updateTareaDTO)
         {
+            TareaModel? task = await _service.Update(id,updateTareaDTO);
+            return Ok(task);
         }
-
+        
         // DELETE api/<TareaController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Remove(int idtask)
         {
+            TareaModel? task = await _service.Remove(idtask);
+            if (task == null) return NotFound();
+            return Ok(task);
         }
     }
 }

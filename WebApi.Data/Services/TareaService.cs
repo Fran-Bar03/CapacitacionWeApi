@@ -49,7 +49,7 @@ namespace WebApi.Data.Services
                     },
                     map: (tarea, usuario) =>
                     {
-                        tarea.Usuario = usuario;
+                        tarea.Usuarioo = usuario;
 
                         return tarea;
                     },
@@ -92,7 +92,7 @@ namespace WebApi.Data.Services
                     },
                  map: (task, user) =>
                  {
-                     task.Usuario = user;
+                     task.Usuarioo = user;
                      return task;
                  },
                  splitOn: "usuarioId"
@@ -114,8 +114,107 @@ namespace WebApi.Data.Services
 
         #endregion
 
+
+        #region Findone
+
+        public async Task<TareaModel?> togglestatus(int idtask)
+        {
+            using NpgsqlConnection database = CreateConnection();
+
+            string sqlQuery = "Select * from fun_task_togglestatus(" +
+                "p_idTarea := @idtarea)";
+
+            try
+            {
+                await database.OpenAsync();
+                TareaModel? result = await database.QueryFirstOrDefaultAsync<TareaModel>(
+                    sqlQuery,
+                    param: new
+                    {
+                        idTarea = idtask
+                    });
+                await database.CloseAsync();
+                return result;
+            }
+            
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        #endregion
+
+        #region Remove
+        public async Task<TareaModel?> Remove(int idtask)
+        {
+            using NpgsqlConnection database = CreateConnection();
+
+            string SqlQuery = "Select * from fun_task_remove("+
+                "p_idTarea := @idtarea)";
+            
+            try
+            {
+                await database.OpenAsync();
+
+                TareaModel? result = await database.QueryFirstOrDefaultAsync<TareaModel>(
+                    SqlQuery,
+                    param: new
+                    {
+                        idTarea = idtask
+                    }
+                    );
+                
+                await database.CloseAsync();
+                return result;
+            }
+            
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+        }
+        
+        #endregion
+
         #region Update 
 
+        public async Task<TareaModel?> Update( int idtask, UpdateTareaDTO updateTareaDTO)
+        {
+            using NpgsqlConnection database = CreateConnection();
+
+            string sqlQuery = "Select * from fun_task_update(" +
+                "p_idTarea := @idtarea," +
+                "p_tarea := @tarea," +
+                "p_descripcion := @descripcion)";
+            
+            try
+            {
+                await database.OpenAsync();
+
+                var result = await database.QueryFirstOrDefaultAsync<TareaModel>(
+                    sqlQuery,
+                    param: new
+                    {
+                        idTarea = idtask,
+                        tarea = updateTareaDTO.Tarea,
+                        descripcion = updateTareaDTO.Descripcion
+                    });
+                await database.CloseAsync();
+                return result;
+            }
+            
+            catch (Exception ex)
+            {
+                return null;
+            }
+
+
+
+
+            
+        }
 
         #endregion
     }
