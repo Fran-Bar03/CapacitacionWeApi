@@ -75,10 +75,10 @@ namespace WebApi.Data.Services
 
         #region FindAll
 
-        public async Task<IEnumerable<TareaModel?>> FindAll(int userId)
+        public async Task<IEnumerable<TareaModel?>> FindAll()
         {
             using NpgsqlConnection database = CreateConnection();
-            string sqlQuery = "Select * from view_tarea where idUsuario = @userId";
+            string sqlQuery = "Select * from view_tarea";
 
             try
             {
@@ -86,10 +86,6 @@ namespace WebApi.Data.Services
 
                 var result = await database.QueryAsync<TareaModel, UserModel, TareaModel>(
                     sqlQuery,
-                    param: new
-                    {
-                        userId
-                    },
                  map: (task, user) =>
                  {
                      task.Usuarioo = user;

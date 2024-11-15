@@ -14,7 +14,7 @@ namespace WebApi.Data.Interfaces
 
         public Task<TareaModel?> Update(int idtask, UpdateTareaDTO updateTareaDTO);
 
-        public Task<IEnumerable<TareaModel?>> FindAll(int userId);
+        public Task<IEnumerable<TareaModel?>> FindAll();
 
         public Task<TareaModel?> Remove(int idtask);
 

@@ -18,9 +18,9 @@ namespace CapacitacionWebApi.Controllers
 
         // GET: api/<TareaController>
         [HttpGet]
-        public async Task<IActionResult> FindAll([FromQuery] int userId)
+        public async Task<IActionResult> FindAll()
         {
-            IEnumerable<TareaModel> task = await _service.FindAll(userId);
+            IEnumerable<TareaModel> task = await _service.FindAll();
 
             if (task.Count() == 0)
             {
@@ -59,7 +59,7 @@ namespace CapacitacionWebApi.Controllers
         }
         
         // DELETE api/<TareaController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{idtask}")]
         public async Task<IActionResult> Remove(int idtask)
         {
             TareaModel? task = await _service.Remove(idtask);
