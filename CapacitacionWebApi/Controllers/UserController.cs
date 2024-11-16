@@ -68,7 +68,7 @@ namespace CapacitacionWebApi.Controllers
         }
 
         // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{iduser}")]
         public async Task<IActionResult> Remove(int iduser)
         {
             UserModel? user = await _service.Remove(iduser);
